@@ -14,7 +14,7 @@
 
 ### Run your installation script:
 
-`~/serverDotFiles/install.sh`
+`~/dotfiles/install.sh`
 
 ### Set Zsh as the default shell and log out/in.
 
