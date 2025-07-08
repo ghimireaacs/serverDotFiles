@@ -10,11 +10,11 @@
 
 ### Clone your dotfiles repository:
 
-`git clone https://github.com/YourUsername/dotfiles.git ~/dotfiles`
+`git clone https://github.com/ghimireaacs/serverDotFiles.git ~/dotfiles`
 
 ### Run your installation script:
 
-`~/dotfiles/install.sh`
+`~/serverDotFiles/install.sh`
 
 ### Set Zsh as the default shell and log out/in.
 
