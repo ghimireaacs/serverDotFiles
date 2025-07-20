@@ -115,6 +115,7 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+
 # --------------------------------------------------------------------
 # Custom Server Dashboard Function (Catppuccin Edition)
 # --------------------------------------------------------------------
@@ -123,8 +124,13 @@ source $ZSH/oh-my-zsh.sh
 
 server_dashboard() {
   # --- Get Last Login Info ---
-  local last_login_info
-  last_login_info=$(last -n 2 | head -n 1 | awk '{print $4, $5, $6, "from", $3}')
+  # First, check if the 'last' command exists to prevent errors.
+  if command -v last &> /dev/null; then
+    local last_login_info
+    last_login_info=$(last -n 2 | head -n 1 | awk '{print $4, $5, $6, "from", $3}')
+  else
+    local last_login_info="`last` command not found"
+  fi
 
   # --- Get Pending Updates Info ---
   local updates_file="/var/lib/update-notifier/updates-available"
@@ -141,14 +147,21 @@ server_dashboard() {
   fi
 
   # --- Display the Dashboard ---
-  # Calls fastfetch and passes the gathered info to the "custom" modules.
-  # The keys here MUST match the keys in config.jsonc.
+  # We use simple keys for the flags (--c-LastLogin) and construct the
+  # full display string with the icon here.
   fastfetch \
-    --structure "default,Last Login,Updates" \
-    --c-"󰦯 Last Login" "$last_login_info" \
-    --c-"󰏔 Updates" "$updates_count_text"
+    --logo-color-1 blue \
+    --structure "default,LastLogin,Updates" \
+    --c-LastLogin "󰦯 Last Login| $last_login_info" \
+    --c-Updates "󰏔 Updates| $updates_count_text"
 }
 
-# --- Disable the default login message and show our dashboard ---
-touch ~/.hushlogin
-server_dashboard
+# --- Zsh Initialization Logic ---
+#
+# The following block ensures that the dashboard only runs for interactive
+# shells, which resolves the Powerlevel10k "console output" warning.
+#
+if [[ -o interactive ]]; then
+  touch ~/.hushlogin
+  server_dashboard
+fi

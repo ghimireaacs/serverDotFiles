@@ -3,7 +3,7 @@ Installation Steps
 1. Install Prerequisites
    First, update your package list and install the necessary tools: git, curl, and zsh.
 
-`sudo apt update && sudo apt install git curl zsh -y`
+`sudo apt update && sudo apt install git curl util-linux zsh -y`
 
 2. Install Oh My Zsh
    Next, install the Oh My Zsh framework. We use the --unattended flag to prevent it from automatically changing the shell, as we will handle that and the configuration manually.
