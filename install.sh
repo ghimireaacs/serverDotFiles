@@ -4,22 +4,23 @@
 # It checks for existing files/links, creates backups, and ensures
 # parent directories exist before creating a symlink.
 
-# Get the absolute path of the directory where the script is located
-DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# Get the absolute path of the directory where the script is located.
+# ${0:a:h} is a Zsh-native way to get the script's directory.
+# 0: script path, :a: absolute path, :h: head/directory part.
+DOTFILES_DIR=${0:a:h}
 
 # ------------------------------------------------------------------------------
-# Centralized list of files to link.
+# Centralized list of files and directories to link.
 #
 # Format:
 #   "path/to/source/in/dotfiles"  "$HOME/path/to/destination"
 # ------------------------------------------------------------------------------
-typeset -A files_to_link
-files_to_link=(
-  "$DOTFILES_DIR/.zshrc"      "$HOME/.zshrc"
-  "$DOTFILES_DIR/.p10k.zsh"    "$HOME/.p10k.zsh"
-  # Add other files here. For example:
-  # "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
-  # "$DOTFILES_DIR/nvim/init.vim" "$HOME/.config/nvim/init.vim"
+typeset -A items_to_link
+items_to_link=(
+  "$DOTFILES_DIR/.zshrc"                     "$HOME/.zshrc"
+  "$DOTFILES_DIR/.p10k.zsh"                   "$HOME/.p10k.zsh"
+  "$DOTFILES_DIR/oh-my-zsh-custom/themes"    "$HOME/.oh-my-zsh/custom/themes"
+  "$DOTFILES_DIR/oh-my-zsh-custom/plugins"   "$HOME/.oh-my-zsh/custom/plugins"
 )
 
 # --- Function to create a symlink with pre-checks and backups ---
@@ -44,7 +45,7 @@ create_symlink() {
     else
       # Otherwise, back up the existing file/link
       local backup_path="$destination_path.bak"
-      echo "  -> Backing up existing file to: $backup_path"
+      echo "  -> Backing up existing item to: $backup_path"
       mv -f "$destination_path" "$backup_path"
     fi
   fi
@@ -55,18 +56,19 @@ create_symlink() {
 }
 
 # --- Main script execution ---
-echo "Creating symbolic links..."
+echo "Creating symbolic links for config files..."
 
-for source in "${(@k)files_to_link}"; do
-  destination=${files_to_link[$source]}
+for source in "${(@k)items_to_link}"; do
+  destination=${items_to_link[$source]}
 
-  # Check if the source file actually exists before trying to link it
-  if [[ -e "$source" ]]; then
+  # Check if the source file/directory actually exists before trying to link it
+  if [[ -e "$source" || -L "$source" ]]; then
     create_symlink "$source" "$destination"
   else
-    echo "  ✖ Source file not found, skipping: $source"
+    echo "  ✖ Source not found, skipping: $source"
   fi
 done
 
 echo ""
-echo "✅ Dotfiles linking complete."
+echo "✅ Done. Please restart your shell or run 'source ~/.zshrc'."
+echo "Your 'dockstat' script is available at: ~/dotfiles/scripts/dockstat"
