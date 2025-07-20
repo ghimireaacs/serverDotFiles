@@ -1,27 +1,45 @@
 #!/bin/zsh
 #
 # A robust script to set up the Zsh environment. It:
-# 1. Installs necessary Oh My Zsh plugins and themes.
-# 2. Creates safe symbolic links for dotfiles, with backups.
+# 1. Cleans up old, broken symlinks from previous versions of this script.
+# 2. Installs necessary Oh My Zsh plugins and themes.
+# 3. Creates safe symbolic links for dotfiles, with backups.
 
 # Get the absolute path of the directory where the script is located.
 DOTFILES_DIR=${0:a:h}
 
 # --- Define paths for plugins and themes ---
-# This makes the script cleaner and easier to read.
 ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 THEMES_DIR="$ZSH_CUSTOM/themes"
 PLUGINS_DIR="$ZSH_CUSTOM/plugins"
 
 # ------------------------------------------------------------------------------
-# 1. Install Oh My Zsh plugins and theme
+# 0. Cleanup: Remove old symlinks if they exist
 #
-# We clone them directly into the Oh My Zsh custom directory.
-# The script checks if the directories already exist to prevent errors on re-runs.
+# This prevents errors if the script was run in a previous state where
+# themes and plugins were symlinked instead of cloned.
 # ------------------------------------------------------------------------------
+echo "Checking for and removing old symlinks..."
+
+# Check and remove the 'themes' symlink if it exists
+if [ -L "$THEMES_DIR" ]; then
+  echo "  -> Found old 'themes' symlink. Removing it."
+  rm "$THEMES_DIR"
+fi
+
+# Check and remove the 'plugins' symlink if it exists
+if [ -L "$PLUGINS_DIR" ]; then
+  echo "  -> Found old 'plugins' symlink. Removing it."
+  rm "$PLUGINS_DIR"
+fi
+
+# ------------------------------------------------------------------------------
+# 1. Install Oh My Zsh plugins and theme
+# ------------------------------------------------------------------------------
+echo ""
 echo "Installing Oh My Zsh theme and plugins..."
 
-# --- FIX: Ensure the custom theme and plugin directories exist ---
+# Ensure the custom theme and plugin directories exist
 echo "  -> Ensuring custom directories exist..."
 mkdir -p "$THEMES_DIR"
 mkdir -p "$PLUGINS_DIR"
@@ -100,3 +118,4 @@ done
 
 echo ""
 echo "✅ Done. Please restart your shell for all changes to take effect."
+# ------------------------------------------------------------------------------
