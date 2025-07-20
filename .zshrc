@@ -114,3 +114,41 @@ source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# --------------------------------------------------------------------
+# Custom Server Dashboard Function (Catppuccin Edition)
+# --------------------------------------------------------------------
+# This function gathers system information that fastfetch can't get
+# on its own and displays it with a custom, themed configuration.
+
+server_dashboard() {
+  # --- Get Last Login Info ---
+  local last_login_info
+  last_login_info=$(last -n 2 | head -n 1 | awk '{print $4, $5, $6, "from", $3}')
+
+  # --- Get Pending Updates Info ---
+  local updates_file="/var/lib/update-notifier/updates-available"
+  local updates_count
+  if [ -f "$updates_file" ]; then
+    updates_count=$(grep -c '^[A-Za-z]' "$updates_file")
+    if [ "$updates_count" -gt 0 ]; then
+      updates_count_text="$updates_count upgradable"
+    else
+      updates_count_text="System is up to date"
+    fi
+  else
+    updates_count_text="n/a"
+  fi
+
+  # --- Display the Dashboard ---
+  # Calls fastfetch and passes the gathered info to the "custom" modules.
+  # The keys here MUST match the keys in config.jsonc.
+  fastfetch \
+    --structure "default,Last Login,Updates" \
+    --c-"󰦯 Last Login" "$last_login_info" \
+    --c-"󰏔 Updates" "$updates_count_text"
+}
+
+# --- Disable the default login message and show our dashboard ---
+touch ~/.hushlogin
+server_dashboard
