@@ -21,6 +21,11 @@ PLUGINS_DIR="$ZSH_CUSTOM/plugins"
 # ------------------------------------------------------------------------------
 echo "Installing Oh My Zsh theme and plugins..."
 
+# --- FIX: Ensure the custom theme and plugin directories exist ---
+echo "  -> Ensuring custom directories exist..."
+mkdir -p "$THEMES_DIR"
+mkdir -p "$PLUGINS_DIR"
+
 # Install Powerlevel10k Theme
 if [ ! -d "$THEMES_DIR/powerlevel10k" ]; then
   echo "  -> Cloning Powerlevel10k theme..."
