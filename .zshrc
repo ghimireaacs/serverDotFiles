@@ -36,7 +36,7 @@ source $ZSH/oh-my-zsh.sh
 # ===================================================================
 # This block runs fastfetch for interactive shells, which prevents
 # the Powerlevel10k "console output" warning.
-if [[ -o interactive ]]; then
-  touch ~/.hushlogin
-  fastfetch
-fi
+# if [[ -o interactive ]]; then
+#   touch ~/.hushlogin
+#   fastfetch
+# fi
