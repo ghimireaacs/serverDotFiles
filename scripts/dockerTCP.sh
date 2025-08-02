@@ -1,54 +1,72 @@
 #!/bin/bash
 
 # This script automates the configuration of the Docker daemon to allow
-# remote connections over TCP port 2375.
+# remote connections over TCP port 2375 and configures the UFW firewall accordingly.
 # It must be run with root privileges (e.g., using sudo).
 
-# Exit immediately if a command exits with a non-zero status.
-set -e
+# --- Configuration & Colors ---
+set -e # Exit immediately if a command exits with a non-zero status.
 
-# --- Check for Root Privileges ---
+# Define colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# --- Script Start ---
+
+# Check for Root Privileges
 if [ "$(id -u)" -ne 0 ]; then
-  echo "This script must be run as root. Please use sudo." >&2
+  echo -e "${YELLOW}This script must be run as root. Please use sudo.${NC}" >&2
   exit 1
 fi
 
-echo "--- Step 1: Creating Docker daemon.json configuration ---"
-# Create the /etc/docker directory if it doesn't exist
+echo -e "${BLUE}--- Step 1: Creating Docker daemon.json configuration ---${NC}"
 mkdir -p /etc/docker
-
-# Create the daemon.json file
 cat <<EOF > /etc/docker/daemon.json
 {"hosts": ["tcp://0.0.0.0:2375", "unix:///var/run/docker.sock"]}
 EOF
+echo -e "${GREEN}✔ File /etc/docker/daemon.json created successfully.${NC}\n"
 
-echo "File /etc/docker/daemon.json created successfully."
-echo ""
-
-echo "--- Step 2: Creating systemd override file ---"
-# Create the override directory
+echo -e "${BLUE}--- Step 2: Creating systemd override file ---${NC}"
 mkdir -p /etc/systemd/system/docker.service.d
-
-# Create the override.conf file
 cat <<EOF > /etc/systemd/system/docker.service.d/override.conf
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd
 EOF
+echo -e "${GREEN}✔ File /etc/systemd/system/docker.service.d/override.conf created successfully.${NC}\n"
 
-echo "File /etc/systemd/system/docker.service.d/override.conf created successfully."
-echo ""
-
-echo "--- Step 3: Reloading systemd and restarting Docker ---"
+echo -e "${BLUE}--- Step 3: Reloading systemd and restarting Docker ---${NC}"
 systemctl daemon-reload
 systemctl restart docker.service
-echo "Docker service has been restarted."
+echo -e "${GREEN}✔ Docker service has been restarted.${NC}\n"
+
+echo -e "${BLUE}--- Step 4: Configuring UFW Firewall ---${NC}"
+# Check if UFW is installed and active
+if command -v ufw &> /dev/null; then
+  if ufw status | grep -q "Status: active"; then
+    echo "UFW is active. Adding rule to allow port 2375..."
+    ufw allow 2375/tcp > /dev/null # Suppress output
+    echo -e "${GREEN}✔ UFW rule added successfully.${NC}"
+  else
+    echo -e "${YELLOW}UFW is installed but not active. Skipping firewall configuration.${NC}"
+  fi
+else
+  echo -e "${YELLOW}UFW is not installed. Skipping firewall configuration.${NC}"
+fi
 echo ""
 
-echo "--- Step 4: Verifying Docker service status ---"
+echo -e "${BLUE}--- Step 5: Verifying Docker service status ---${NC}"
 # Give the service a moment to start up before checking status
 sleep 2
-systemctl status docker.service --no-pager
-
+if systemctl is-active --quiet docker.service; then
+  echo -e "${GREEN}✔ Docker service is active and running.${NC}"
+else
+  echo -e "${RED}❌ Docker service failed to start. Please check logs with 'journalctl -xeu docker.service'.${NC}"
+  exit 1
+fi
 echo ""
-echo "Setup complete. Docker should now be accessible over TCP port 2375."
+
+echo -e "${GREEN}🚀 Setup complete. Docker should now be accessible over TCP port 2375.${NC}"
