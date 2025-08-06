@@ -75,6 +75,7 @@ typeset -A items_to_link
 items_to_link=(
   "$DOTFILES_DIR/.zshrc"      "$HOME/.zshrc"
   "$DOTFILES_DIR/.p10k.zsh"    "$HOME/.p10k.zsh"
+  "$DOTFILES_DIR/zsh"    	"$HOME/zsh"
 )
 
 # --- Function to create a symlink with pre-checks and backups ---
