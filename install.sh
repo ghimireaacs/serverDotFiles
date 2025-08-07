@@ -23,6 +23,7 @@ echo "Installing prerequisites and command-line tools..."
 # Update package list and install dependencies from apt
 sudo apt update && sudo apt install -y \
   git \
+  zoxide \
   curl \
   zsh \
   fzf \
