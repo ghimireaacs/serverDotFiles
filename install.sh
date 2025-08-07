@@ -53,17 +53,16 @@ fi
 echo "Installing Oh My Zsh theme and plugins..."
 mkdir -p "$THEMES_DIR" "$PLUGINS_DIR" # Ensure custom directories exist
 
-# --- FIXED: Install Powerlevel10k Theme ---
+# Install Powerlevel10k Theme
 P10K_DIR="$THEMES_DIR/powerlevel10k"
 if [ -d "$P10K_DIR" ] && [ -n "$(ls -A $P10K_DIR)" ]; then
   echo "  ✔ Powerlevel10k theme already installed and not empty."
 else
   echo "  -> Cloning Powerlevel10k theme..."
-  # Remove potentially empty directory before cloning
-  rm -rf "$P10K_DIR"
+  rm -rf "$P10K_DIR" # Remove potentially empty directory before cloning
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
   if [ $? -ne 0 ]; then
-    echo "  ✖ Failed to clone Powerlevel10k. Please check your internet connection and git installation." >&2
+    echo "  ✖ Failed to clone Powerlevel10k. Please check your internet connection." >&2
     exit 1
   fi
 fi

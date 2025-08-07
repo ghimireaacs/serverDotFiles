@@ -8,25 +8,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # ===================================================================
-# Initialize Frameworks
-# Frameworks are loaded first to set up all the defaults.
-# ===================================================================
-
-## Oh My Zsh - Sourced before custom files so we can override its settings.
-# Note: OMZ settings are now defined in ~/zsh/configs/oh-my-zsh.zsh
-#
-# FIX: Check if Oh My Zsh exists before trying to source it.
-# This prevents errors on a fresh installation.
-if [ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
-  source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
-fi
-
-## Powerlevel10k Theme
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# ===================================================================
-# Load Custom Configuration Files
-# Loaded LAST to ensure they override any framework defaults.
+# Custom Configuration Loader
 # ===================================================================
 
 # Helper to source all files from a directory.
@@ -39,9 +21,22 @@ source_dir() {
   fi
 }
 
-# Load configs in order: exports -> configs -> aliases -> functions
+# --- Part 1: Load Pre-requisite Configurations ---
+# We load exports and configs first so frameworks can use their variables.
 source_dir "exports"
 source_dir "configs"
+
+# --- Part 2: Initialize Frameworks ---
+# Now load Oh My Zsh, which will correctly use the ZSH_THEME set in Part 1.
+if [ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
+  source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
+fi
+
+# Initialize Powerlevel10k Theme.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# --- Part 3: Load Custom Overrides ---
+# We load aliases and functions last to ensure they override any framework defaults.
 source_dir "aliases"
 source_dir "functions"
 
