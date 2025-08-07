@@ -1,9 +1,9 @@
 #!/bin/zsh
 #
 # A robust script to set up the Zsh environment. It:
-# 1. Cleans up old, broken symlinks from previous versions of this script.
-# 2. Installs necessary Oh My Zsh plugins and themes.
-# 3. Creates safe symbolic links for dotfiles, with backups.
+# 1. Installs all necessary packages and command-line tools.
+# 2. Installs Oh My Zsh plugins and the Powerlevel10k theme.
+# 3. Creates safe symbolic links for all dotfiles, with backups.
 
 # Get the absolute path of the directory where the script is located.
 DOTFILES_DIR=${0:a:h}
@@ -14,27 +14,28 @@ THEMES_DIR="$ZSH_CUSTOM/themes"
 PLUGINS_DIR="$ZSH_CUSTOM/plugins"
 
 # ------------------------------------------------------------------------------
-# 0. Cleanup: Remove old symlinks if they exist
-#
-# This prevents errors if the script was run in a previous state where
-# themes and plugins were symlinked instead of cloned.
+# 1. Install Prerequisites & Command-Line Tools
 # ------------------------------------------------------------------------------
-echo "Checking for and removing old symlinks..."
+echo ""
+echo "Installing prerequisites and command-line tools..."
 
-# Check and remove the 'themes' symlink if it exists
-if [ -L "$THEMES_DIR" ]; then
-  echo "  -> Found old 'themes' symlink. Removing it."
-  rm "$THEMES_DIR"
-fi
+# Update package list and install dependencies from apt
+sudo apt update && sudo apt install -y \
+  git \
+  curl \
+  zsh \
+  fzf \
+  ripgrep \
+  bat \
+  exa \
+  entr
 
-# Check and remove the 'plugins' symlink if it exists
-if [ -L "$PLUGINS_DIR" ]; then
-  echo "  -> Found old 'plugins' symlink. Removing it."
-  rm "$PLUGINS_DIR"
-fi
+# Install zoxide using its official script for the latest version
+echo "-> Installing zoxide..."
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 # ------------------------------------------------------------------------------
-# 1. Install Oh My Zsh plugins and theme
+# 2. Install Oh My Zsh plugins and theme
 # ------------------------------------------------------------------------------
 echo ""
 echo "Installing Oh My Zsh theme and plugins..."
@@ -69,13 +70,14 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 2. Create symbolic links for configuration files
+# 3. Create symbolic links for configuration files
 # ------------------------------------------------------------------------------
 typeset -A items_to_link
 items_to_link=(
   "$DOTFILES_DIR/.zshrc"      "$HOME/.zshrc"
-  "$DOTFILES_DIR/.p10k.zsh"    "$HOME/.p10k.zsh"
-  "$DOTFILES_DIR/zsh"    	"$HOME/zsh"
+  "$DOTFILES_DIR/.p10k.zsh"   "$HOME/.p10k.zsh"
+  "$DOTFILES_DIR/zsh"        "$HOME/zsh"
+  "$DOTFILES_DIR/cbin"       "$HOME/cbin"
 )
 
 # --- Function to create a symlink with pre-checks and backups ---

@@ -1,52 +1,38 @@
 # ===================================================================
-# Zsh Configuration - Managed by Dotfiles
+# Zsh Configuration
 # ===================================================================
 
-# -------------------------------------------------------------------
-# Powerlevel10k Instant Prompt
-# This must stay at the top to ensure fast shell startup.
-# -------------------------------------------------------------------
+## P10k Instant Prompt (must be first for speed)
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# -------------------------------------------------------------------
-# Oh My Zsh Configuration
-# -------------------------------------------------------------------
-# Path to your Oh My Zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# ===================================================================
+# Load Custom Configuration Files & Initialize Frameworks
+# ===================================================================
 
-# Set the name of the theme.
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# Helper to source all files from a directory.
+source_dir() {
+  local dir_path="$HOME/zsh/$1"
+  if [ -d "$dir_path" ]; then
+    for file in "$dir_path"/*(N); do
+      source "$file"
+    done
+  fi
+}
 
-# Define the plugins to load.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+# Load custom configs in order. OMZ settings must be loaded before OMZ itself.
+source_dir "exports"
+source_dir "configs"
+source_dir "aliases"
+source_dir "functions"
 
-# Load Oh My Zsh.
+# Unset helper to keep the shell environment clean.
+unset -f source_dir
+
+# Initialize Oh My Zsh (uses settings loaded above).
 source $ZSH/oh-my-zsh.sh
 
-# -------------------------------------------------------------------
-# Powerlevel10k Configuration
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# -------------------------------------------------------------------
+# Initialize Powerlevel10k Theme.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# ===================================================================
-# Display Server Info on Login
-# ===================================================================
-# This block runs fastfetch for interactive shells, which prevents
-# the Powerlevel10k "console output" warning.
-# if [[ -o interactive ]]; then
-#   touch ~/.hushlogin
-#   fastfetch
-# fi
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-
-# Adding a function to include all my ZSH Files in Zsh directory.
-for file in ~/zsh/**/*.(zsh|sh|alias|func)(N); do
-  source "$file"
-done

@@ -1,0 +1,21 @@
+# ===================================================================
+# General System Aliases
+# ===================================================================
+
+# Bat (replacement for 'cat')
+alias cat='batcat -pp'
+alias catl='batcat'
+alias catp='batcat -p'
+
+# Exa (replacement for 'ls')
+alias ls='exa --icons'
+alias ll='exa -l --icons'
+alias la='exa -la --icons' # List all, including hidden
+alias llt='exa -lT --icons' # Tree view
+
+# Ripgrep (replacement for 'grep')
+# Always search hidden files and ignore .git
+alias rg="rg --hidden --glob '!.git'"
+
+# Sourceing .zshrc
+alias so='source ~/.zshrc'
