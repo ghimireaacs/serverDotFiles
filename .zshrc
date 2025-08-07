@@ -8,7 +8,35 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # ===================================================================
-# Custom Configuration Loader
+# Framework Configuration & Initialization
+# ===================================================================
+
+# --- Oh My Zsh Settings (defined directly here) ---
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+plugins=(
+  git
+  fzf
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+# --- Load Oh My Zsh ---
+# It will use the variables defined just above.
+if [ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
+  source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
+fi
+
+# --- Initialize Zoxide ---
+# This must come after Oh My Zsh to ensure it's loaded correctly.
+eval "$(zoxide init zsh)"
+
+# --- Load Powerlevel10k ---
+# This must come after Oh My Zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ===================================================================
+# Load Custom Aliases & Functions
 # ===================================================================
 
 # Helper to source all files from a directory.
@@ -21,30 +49,11 @@ source_dir() {
   fi
 }
 
-# --- Part 1: Load Pre-requisite Configurations ---
-# We load exports and configs first so frameworks can use their variables.
+# --- Load Custom Files ---
+# These are loaded LAST to ensure they override any framework defaults.
 source_dir "exports"
-source_dir "configs"
-
-# --- Part 2: Initialize Frameworks ---
-# Now load Oh My Zsh, which will correctly use the ZSH_THEME set in Part 1.
-if [ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
-  source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
-fi
-
-# Initialize Powerlevel10k Theme.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# --- Part 3: Load Custom Overrides ---
-# We load aliases and functions last to ensure they override any framework defaults.
 source_dir "aliases"
 source_dir "functions"
 
 # Unset helper to keep the shell environment clean.
 unset -f source_dir
-
-## Optional: System Info on Login
-# if [[ -o interactive ]]; then
-#   touch ~/.hushlogin
-#   fastfetch
-# fi

@@ -1,6 +1,3 @@
-Of course. Here is the content of the `README.md` file as plain text.
-
------
 
 # My Zsh Dotfiles
 
@@ -10,7 +7,7 @@ This setup provides a fast, beautiful, and highly functional command-line experi
 
 ## 💡 Features
 
-  * **Modular Structure:** All custom settings are neatly organized in the `~/zsh` directory (`aliases`, `functions`, `exports`, `configs`).
+  * **Modular Structure:** All custom settings are neatly organized in the `~/zsh` directory (`aliases`, `functions`, `exports`).
   * **Oh My Zsh:** Utilizes the popular Zsh framework for plugin and theme management.
   * **Powerlevel10k Theme:** A fast, flexible, and beautiful prompt with instant feedback.
   * **Helpful Plugins:** Comes with `zsh-autosuggestions`, `zsh-syntax-highlighting`, and `fzf` pre-configured.
@@ -27,7 +24,15 @@ This setup provides a fast, beautiful, and highly functional command-line experi
 
 Follow these steps to set up the configuration on a new Debian-based system (like Ubuntu).
 
-### 1\. Clone the Repository
+### 1\. Install Zsh
+
+First, ensure Zsh is installed on your system.
+
+```bash
+sudo apt update && sudo apt install zsh -y
+```
+
+### 2\. Clone the Repository
 
 Clone this repository into a `dotfiles` directory in your home folder.
 
@@ -35,11 +40,11 @@ Clone this repository into a `dotfiles` directory in your home folder.
 git clone https://github.com/ghimireaacs/serverDotFiles.git ~/dotfiles
 ```
 
-### 2\. Run the Installer
+### 3\. Run the Installer
 
-Run the main `install.sh` script from within the new directory. This single script handles everything:
+Run the main `install.sh` script from within the new directory. This single script handles everything else:
 
-  * Installs all required system packages and tools (`zsh`, `eza`, `bat`, `fzf`, etc.).
+  * Installs all other required system packages and tools (`eza`, `bat`, `fzf`, etc.).
   * Installs the Oh My Zsh framework, Powerlevel10k theme, and Zsh plugins.
   * Creates symbolic links for all your configuration files.
   * Sets Zsh as your default shell.
