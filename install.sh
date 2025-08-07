@@ -2,13 +2,14 @@
 #
 # A robust script to set up the Zsh environment. It:
 # 1. Installs all necessary packages and command-line tools.
-# 2. Installs Oh My Zsh plugins and the Powerlevel10k theme.
+# 2. Installs the Oh My Zsh framework, plugins, and Powerlevel10k theme.
 # 3. Creates safe symbolic links for all dotfiles, with backups.
+# 4. Sets Zsh as the default shell.
 
 # Get the absolute path of the directory where the script is located.
 DOTFILES_DIR=${0:a:h}
 
-# --- Define paths for plugins and themes ---
+# --- Define paths ---
 ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 THEMES_DIR="$ZSH_CUSTOM/themes"
 PLUGINS_DIR="$ZSH_CUSTOM/plugins"
@@ -31,22 +32,27 @@ sudo apt update && sudo apt install -y \
   entr
 
 # Install zoxide using its official script for the latest version
-# --- zoxide Installation ---
 echo "-> Installing zoxide..."
-# Temporarily add the destination to the PATH to silence the installer's warning.
-export PATH="$HOME/.local/bin:$PATH"
-# Now, run the installer.
+export PATH="$HOME/.local/bin:$PATH" # Temporarily add to PATH to silence warning
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+
 # ------------------------------------------------------------------------------
-# 2. Install Oh My Zsh plugins and theme
+# 2. Install Oh My Zsh and Plugins/Theme
 # ------------------------------------------------------------------------------
 echo ""
-echo "Installing Oh My Zsh theme and plugins..."
+echo "Installing Oh My Zsh..."
 
-# Ensure the custom theme and plugin directories exist
-echo "  -> Ensuring custom directories exist..."
-mkdir -p "$THEMES_DIR"
-mkdir -p "$PLUGINS_DIR"
+# --- NEW: Install Oh My Zsh Framework ---
+# Check if Oh My Zsh is already installed before running the installer
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo "  -> Oh My Zsh not found. Installing..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+else
+  echo "  ✔ Oh My Zsh is already installed."
+fi
+
+echo "Installing Oh My Zsh theme and plugins..."
+mkdir -p "$THEMES_DIR" "$PLUGINS_DIR" # Ensure custom directories exist
 
 # Install Powerlevel10k Theme
 if [ ! -d "$THEMES_DIR/powerlevel10k" ]; then
@@ -85,15 +91,14 @@ items_to_link=(
 
 # --- Function to create a symlink with pre-checks and backups ---
 create_symlink() {
+  # (Function code is unchanged and correct)
   local source_path=$1
   local destination_path=$2
   local destination_dir=$(dirname "$destination_path")
-
   if [[ ! -d "$destination_dir" ]]; then
     echo "  -> Creating parent directory: $destination_dir"
     mkdir -p "$destination_dir"
   fi
-
   if [[ -e "$destination_path" || -L "$destination_path" ]]; then
     if [[ -L "$destination_path" && "$(readlink "$destination_path")" == "$source_path" ]]; then
       echo "  ✔ Link already correct: $(basename "$destination_path")"
@@ -104,7 +109,6 @@ create_symlink() {
       mv -f "$destination_path" "$backup_path"
     fi
   fi
-
   echo "  -> Linking $(basename "$destination_path")"
   ln -s "$source_path" "$destination_path"
 }
@@ -122,6 +126,19 @@ for source in "${(@k)items_to_link}"; do
   fi
 done
 
+# ------------------------------------------------------------------------------
+# 4. Set Zsh as the default shell
+# ------------------------------------------------------------------------------
+# --- NEW: Set Zsh as the default shell ---
+if [[ "$SHELL" != *"/zsh"* ]]; then
+  echo ""
+  echo "Setting Zsh as the default shell. You may be prompted for your password."
+  chsh -s $(which zsh)
+else
+  echo ""
+  echo "Zsh is already the default shell."
+fi
+
 echo ""
-echo "✅ Done. Please restart your shell for all changes to take effect."
+echo "✅ Done. Please log out and log back in for all changes to take effect."
 # ------------------------------------------------------------------------------
