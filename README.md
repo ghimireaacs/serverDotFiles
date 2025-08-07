@@ -25,10 +25,10 @@ Follow these steps to set up the configuration on a new Debian-based system (lik
 
 ### 1. Install `git` and `curl`
 
-Your system needs `git` and `curl` to download the necessary files.
+Your system needs `git`, `curl` and `zsh` to download the necessary files.
 
 ```bash
-sudo apt update && sudo apt install git curl -y
+sudo apt update && sudo apt install git curl zsh -y
 ```
 
 ### 2\. Install Oh My Zsh
@@ -36,7 +36,7 @@ sudo apt update && sudo apt install git curl -y
 Next, install the Oh My Zsh framework. The `--unattended` flag prevents it from changing your shell, as we'll do that manually.
 
 ```bash
-sh -c "$(curl -fsSL [https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh](https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh))" "" --unattended
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 ```
 
 ### 3\. Clone and Run the Installer
