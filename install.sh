@@ -27,7 +27,7 @@ sudo apt update && sudo apt install -y \
   fzf \
   ripgrep \
   bat \
-  exa \
+  eza \
   entr
 
 # Install zoxide using its official script for the latest version
