@@ -31,9 +31,12 @@ sudo apt update && sudo apt install -y \
   entr
 
 # Install zoxide using its official script for the latest version
+# --- zoxide Installation ---
 echo "-> Installing zoxide..."
+# Temporarily add the destination to the PATH to silence the installer's warning.
+export PATH="$HOME/.local/bin:$PATH"
+# Now, run the installer.
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-
 # ------------------------------------------------------------------------------
 # 2. Install Oh My Zsh plugins and theme
 # ------------------------------------------------------------------------------
