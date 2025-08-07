@@ -2,7 +2,6 @@
 alias g='git'
 alias gs='git status'
 alias gaa='git add .'
-alias gcm='git commit -m'
 alias gp='git push'
 alias gpl='git pull'
 alias gf='git fetch'
