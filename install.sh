@@ -42,8 +42,7 @@ curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | 
 echo ""
 echo "Installing Oh My Zsh..."
 
-# --- NEW: Install Oh My Zsh Framework ---
-# Check if Oh My Zsh is already installed before running the installer
+# Install Oh My Zsh Framework
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   echo "  -> Oh My Zsh not found. Installing..."
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -54,12 +53,19 @@ fi
 echo "Installing Oh My Zsh theme and plugins..."
 mkdir -p "$THEMES_DIR" "$PLUGINS_DIR" # Ensure custom directories exist
 
-# Install Powerlevel10k Theme
-if [ ! -d "$THEMES_DIR/powerlevel10k" ]; then
-  echo "  -> Cloning Powerlevel10k theme..."
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$THEMES_DIR/powerlevel10k"
+# --- FIXED: Install Powerlevel10k Theme ---
+P10K_DIR="$THEMES_DIR/powerlevel10k"
+if [ -d "$P10K_DIR" ] && [ -n "$(ls -A $P10K_DIR)" ]; then
+  echo "  ✔ Powerlevel10k theme already installed and not empty."
 else
-  echo "  ✔ Powerlevel10k theme already installed."
+  echo "  -> Cloning Powerlevel10k theme..."
+  # Remove potentially empty directory before cloning
+  rm -rf "$P10K_DIR"
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
+  if [ $? -ne 0 ]; then
+    echo "  ✖ Failed to clone Powerlevel10k. Please check your internet connection and git installation." >&2
+    exit 1
+  fi
 fi
 
 # Install zsh-autosuggestions Plugin
@@ -91,7 +97,6 @@ items_to_link=(
 
 # --- Function to create a symlink with pre-checks and backups ---
 create_symlink() {
-  # (Function code is unchanged and correct)
   local source_path=$1
   local destination_path=$2
   local destination_dir=$(dirname "$destination_path")
@@ -129,11 +134,10 @@ done
 # ------------------------------------------------------------------------------
 # 4. Set Zsh as the default shell
 # ------------------------------------------------------------------------------
-# --- NEW: Set Zsh as the default shell ---
 if [[ "$SHELL" != *"/zsh"* ]]; then
   echo ""
   echo "Setting Zsh as the default shell. You may be prompted for your password."
-  chsh -s $(which zsh)
+  sudo chsh -s $(which zsh) $USER
 else
   echo ""
   echo "Zsh is already the default shell."
