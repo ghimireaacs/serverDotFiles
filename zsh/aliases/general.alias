@@ -17,5 +17,8 @@ alias llt='exa -lT --icons' # Tree view
 # Always search hidden files and ignore .git
 alias rg="rg --hidden --glob '!.git'"
 
-# Sourceing .zshrc
+# Sourcing .zshrc
 alias so='source ~/.zshrc'
+
+# cd to zoxide
+alias cd='z'
