@@ -57,4 +57,7 @@ source_dir "functions"
 
 # Unset helper to keep the shell environment clean.
 unset -f source_dir
+
+
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export EDITOR='/opt/nvim-linux-x86_64/bin/nvim'
