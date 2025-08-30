@@ -68,34 +68,30 @@ The first time you start Zsh, the **Powerlevel10k configuration wizard** will ru
 
 Follow these steps for Tmux installation
 
-### 1\. Install Tmux
+These steps assume you have the prerequisites (Git, fzf, zoxide, Nerd Fonts) installed.
 
-  `sudo apt install tmux`
+### 1\.  Clone the TPM (Tmux Plugin Manager)
 
-### 2\. Assuming you have already cloned this repository.
+ ```bash
+ git clone [https://github.com/tmux-plugins/tpm](https://github.com/tmux-plugins/tpm) ~/.tmux/plugins/tpm
+ ```
+
+
+### 2\.  **Create the Symlinks:**
 
 ```bash
-# Ensure the ~/.config directory exists
+# Create the config directory if it doesn't exist
 mkdir -p ~/.config
-
-# Link the tmux config directory
-ln -s ~/dotfiles/.config/tmux ~/.config/tmux
-
-# Link the .tmux directory (for TPM and plugins)
-ln -s ~/dotfiles/.tmux ~/.tmux
+# Link the tmux configuration
+ln -s ~/dotfiles/tmux ~/.config/tmux
 ```
+ 
+ *(Note: You'll need to update `~/dotfiles/tmux` to the actual location.)*
 
+### 3\. Run
 
+Once installed, launch `tmux` and install the plugins by pressing:
 
-### 3\. Launch and install Plugins.
+**`Prefix + I`** (Capital I)
 
-#### 1\. Start Tmux
-
-`tmux`
-
-#### 2\. Install Plugins
-
-- Once inside tmux, press `Prefix` (`ctrl + space`) + `I` (Capital I)
-
-It should finish the installation.
-
+Your prefix is **`Ctrl + Space`**.
