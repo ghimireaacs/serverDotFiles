@@ -63,3 +63,39 @@ cd ~/dotfiles
 To complete the installation, you must **log out and log back in** for the new shell to become active.
 
 The first time you start Zsh, the **Powerlevel10k configuration wizard** will run automatically. Follow its prompts to customize the appearance of your shell. You can re-run it anytime by typing `p10k configure`.
+
+## Tmux Installation
+
+Follow these steps for Tmux installation
+
+### 1\. Install Tmux
+
+  `sudo apt install tmux`
+
+### 2\. Assuming you have already cloned this repository.
+
+```bash
+# Ensure the ~/.config directory exists
+mkdir -p ~/.config
+
+# Link the tmux config directory
+ln -s ~/dotfiles/.config/tmux ~/.config/tmux
+
+# Link the .tmux directory (for TPM and plugins)
+ln -s ~/dotfiles/.tmux ~/.tmux
+```
+
+
+
+### 3\. Launch and install Plugins.
+
+#### 1\. Start Tmux
+
+`tmux`
+
+#### 2\. Install Plugins
+
+- Once inside tmux, press `Prefix` (`ctrl + space`) + `I` (Capital I)
+
+It should finish the installation.
+
