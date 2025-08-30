@@ -73,7 +73,7 @@ These steps assume you have the prerequisites (Git, fzf, zoxide, Nerd Fonts) ins
 ### 1\.  Clone the TPM (Tmux Plugin Manager)
 
  ```bash
- git clone [https://github.com/tmux-plugins/tpm](https://github.com/tmux-plugins/tpm) ~/.tmux/plugins/tpm
+ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
  ```
 
 
