@@ -61,3 +61,20 @@ unset -f source_dir
 
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export EDITOR='/opt/nvim-linux-x86_64/bin/nvim'
+export KUBECONFIG=/home/ghost/.kube/config
+
+
+## TESTING TITLE
+
+if [ -n "$SSH_CONNECTION" ]; then
+    # Disable Oh-My-Zsh auto title
+    DISABLE_AUTO_TITLE="true"
+    
+    # Set title to hostname
+    echo -ne "\033]0;SSH: $(hostname)\007"
+    
+    # Keep title on every prompt
+    precmd() {
+        echo -ne "\033]0;SSH: $(hostname)\007"
+    }
+fi
