@@ -12,6 +12,8 @@ alias ls='exa --icons'
 alias ll='exa -l --icons'
 alias la='exa -la --icons' # List all, including hidden
 alias llt='exa -lT --icons' # Tree view
+alias tree='exa --tree --level=3 -lh --git --icons --color-scale' # Tree 3 level
+
 
 # Ripgrep (replacement for 'grep')
 # Always search hidden files and ignore .git
@@ -22,3 +24,7 @@ alias so='source ~/.zshrc'
 
 # cd to zoxide
 alias cd='z'
+
+# Python
+alias python='python3'
+

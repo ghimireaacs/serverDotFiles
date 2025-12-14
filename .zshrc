@@ -61,3 +61,12 @@ unset -f source_dir
 
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export EDITOR='/opt/nvim-linux-x86_64/bin/nvim'
+eval "$(rbenv init - zsh)"
+export PATH=$PATH:/usr/local/go/bin
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/ghost/google-cloud-sdk/path.zsh.inc' ]; then . '/home/ghost/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/ghost/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/ghost/google-cloud-sdk/completion.zsh.inc'; fi
