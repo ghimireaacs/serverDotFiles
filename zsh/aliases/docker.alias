@@ -7,6 +7,7 @@ alias dlogs='docker logs'
 alias dstop='docker stop'
 alias drm='docker rm'
 alias dprune='docker system prune -a --volumes'
+alias dps='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"'
 
 # Docker Compose Aliases
 alias dc='docker compose'
