@@ -62,8 +62,8 @@ unset -f source_dir
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export EDITOR='/opt/nvim-linux-x86_64/bin/nvim'
 
-# Ruby Environment
-eval "$(rbenv init - zsh)"
+# Ruby Environment (Enable Where Installed)
+# eval "$(rbenv init - zsh)"
 
 # GO Binary
 export PATH=$PATH:/usr/local/go/bin
