@@ -2,11 +2,6 @@
 # General System Aliases
 # ===================================================================
 
-# Bat (replacement for 'cat')
-alias cat='batcat -pp'
-alias catl='batcat'
-alias catp='batcat -p'
-
 # Exa (replacement for 'ls')
 alias ls='exa --icons'
 alias ll='exa -l --icons'
