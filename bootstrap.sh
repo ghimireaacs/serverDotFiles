@@ -22,6 +22,6 @@ else
   exit 1
 fi
 
-bash "$SCRIPT_DIR/install.sh"
+"$SCRIPT_DIR/install.sh"
 
 echo "Bootstrap complete. Log out and back in."
