@@ -1,173 +1,125 @@
 # serverDotFiles
 
-Opinionated dotfiles and shell bootstrap used across my systems  
-(servers and workstations).
-
-This repository is the **single source of truth (SSOT)** for:
-- Zsh configuration
-- Aliases, functions, exports
-- tmux configuration
-- Custom helper scripts
-
-The installer logic is intentionally simple and safe to re-run.
+Opinionated dotfiles and shell bootstrap for my servers and workstations. Single source of truth for Zsh, tmux, aliases, and custom scripts — shared unchanged across all machines.
 
 ---
 
-## What This Repo Does
+## What's included
 
-### SSOT (authoritative state)
-These directories define my actual environment:
-
-```
-
-zsh/ → aliases, exports, functions  
-tmux/ → tmux config + TPM  
-cbin/ → custom helper scripts
-
-```
-
-These are shared **unchanged** across:
-- Debian/Ubuntu servers
-- Arch Linux workstation
-- Any future Linux systems
+| Layer | Contents |
+|---|---|
+| `zsh/aliases/` | General, git, docker, function-based aliases |
+| `zsh/exports/` | PATH, NVM, and other environment exports |
+| `zsh/functions/` | Custom Zsh functions |
+| `zsh/p10k/` | Powerlevel10k profiles (server / workstation / default) |
+| `tmux/` | tmux config + TPM plugin manager |
+| `cbin/` | Custom helper scripts (`dockstat`, `dockerTCP`) |
 
 ---
 
-## Bootstrap Model
+## OS support
 
-The repo uses a **two-layer bootstrap**:
+| OS | Package script | Notes |
+|---|---|---|
+| Arch Linux | `arch/packages.sh` | Full toolset via pacman |
+| Debian | `debian/packages.sh` | apt + batcat symlink |
+| Ubuntu | `ubuntu/packages.sh` | apt + batcat symlink + zoxide from upstream |
 
-```
+### Why Ubuntu gets its own script
 
-bootstrap.sh  
-├── debian/packages.sh (apt-based systems)  
-├── arch/packages.sh (pacman-based systems)  
-└── install.sh (OS-agnostic user setup)
+Two packages behave differently on Ubuntu vs Debian:
 
-````
-
-### Responsibilities
-- **packages.sh**  
-  Installs system packages (OS-specific)
-- **install.sh**  
-  Installs Oh My Zsh, plugins, and symlinks dotfiles
-- **bootstrap.sh**  
-  Detects OS and runs the correct flow
+- **bat** — On both Debian and Ubuntu, `apt install bat` installs the binary as `batcat` (to avoid conflict with another `bat` package). The scripts create `~/.local/bin/bat → /usr/bin/batcat` so everything works uniformly.
+- **zoxide** — Ubuntu's apt repo ships an outdated version. The Ubuntu script installs zoxide directly from the official upstream installer to get the current release.
 
 ---
 
-## Installation (Recommended)
+## Installation
 
-### 1. Clone the repository
+### 1. Clone
 
 ```bash
 git clone https://github.com/ghimireaacs/serverDotFiles.git ~/serverDotFiles
 cd ~/serverDotFiles
-````
+```
 
 ### 2. Run bootstrap
 
 ```bash
-./bootstrap.sh
+bash bootstrap.sh
 ```
 
-This will:
+The script auto-detects your OS and runs the correct package installer, then runs the shell setup.
 
-- Install required system packages
-    
-- Install Oh My Zsh + Powerlevel10k
-    
-- Install Zsh plugins
-    
-- Symlink `zsh/`, `tmux/`, and `cbin/`
-    
-- Set Zsh as the default shell
-    
+What it does:
+- Installs system packages for your OS
+- Installs Oh My Zsh
+- Installs Powerlevel10k theme
+- Installs zsh-autosuggestions and zsh-syntax-highlighting
+- Symlinks `.zshrc`, `.p10k.zsh`, `zsh/`, `tmux/`, and `cbin/`
+- Sets Zsh as your default login shell
 
-### 3. Log out and log back in
+### 3. Log out and back in
 
-Required for shell change to take effect.
+Required for the shell change to take effect.
 
----
+### 4. Install tmux plugins
 
-## Zsh Details
-
-- Framework: **Oh My Zsh**
-    
-- Theme: **Powerlevel10k**
-    
-- Plugins:
-    
-    - zsh-autosuggestions
-        
-    - zsh-syntax-highlighting
-        
-    - fzf integration
-        
-
-Powerlevel10k configuration wizard will run on first login  
-(re-run anytime with `p10k configure`).
-
----
-
-## tmux
-
-tmux is fully managed by this repo.
-
-- Config is symlinked automatically
-    
-- TPM (tmux plugin manager) is included
-    
-- Prefix: **Ctrl + Space**
-    
-
-After first launch:
+On first tmux launch:
 
 ```
 Prefix + I
 ```
 
-to install plugins.
+(Prefix is `Ctrl + Space`)
 
 ---
 
-## Re-running & Safety
+## Packages installed
 
-- Scripts are **idempotent**
-    
-- Existing files are backed up with `.bak`
-    
+| Package | Purpose | Arch | Debian | Ubuntu |
+|---|---|---|---|---|
+| git | Version control | pacman | apt | apt |
+| curl | HTTP client | pacman | apt | apt |
+| zsh | Shell | pacman | apt | apt |
+| fzf | Fuzzy finder | pacman | apt | apt |
+| ripgrep | Fast grep | pacman | apt | apt |
+| bat | Syntax-highlighted cat | pacman | apt (→ batcat) | apt (→ batcat) |
+| eza | Modern ls | pacman | — | — |
+| zoxide | Smarter cd | pacman | apt | upstream |
+| entr | Run on file change | pacman | apt | apt |
+| tmux | Terminal multiplexer | pacman | apt | apt |
+
+---
+
+## Shell setup
+
+- **Framework:** Oh My Zsh
+- **Theme:** Powerlevel10k (wizard runs on first login, re-run with `p10k configure`)
+- **Plugins:** zsh-autosuggestions, zsh-syntax-highlighting, fzf
+- **cd:** aliased to `z` (zoxide)
+- **ls/ll/la:** aliased to `eza` variants
+
+---
+
+## Re-running safely
+
+All scripts are idempotent:
+- Existing dotfiles are backed up as `.bak` before symlinking
+- Already-installed tools are skipped
 - Safe to re-run on existing systems
-    
-- No destructive actions
-    
 
 ---
 
-## What This Repo Does NOT Do
+## What this repo does not manage
 
-- Does not manage desktop environments
-    
-- Does not install GUI applications
-    
-- Does not manage system services
-    
-- Does not enforce OS-specific behavior in dotfiles
-    
-
----
-
-## Notes
-
-- Installer scripts are transport mechanisms
-    
-- Actual configuration lives in `zsh/`, `tmux/`, `cbin/`
-    
-- Servers and workstations intentionally share the same shell state
-    
+- Desktop environments or GUI applications
+- System services
+- OS-level configuration
+- Anything that requires root beyond package installs
 
 ---
 
 ## License
 
-Personal use. Adapt as needed.
+Personal use. Adapt freely.
