@@ -1,3 +1,8 @@
+# APPEND HISTORY ACROSS SESSIONS
+
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+
 # ===================================================================
 # Zsh Configuration
 # ===================================================================
@@ -29,6 +34,7 @@ fi
 
 # --- Initialize Zoxide ---
 # This must come after Oh My Zsh to ensure it's loaded correctly.
+export _ZO_DOCTOR=0
 eval "$(zoxide init zsh)"
 
 # --- Load Powerlevel10k ---
@@ -85,12 +91,14 @@ export KUBECONFIG=/home/ghost/.kube/config
 if [ -n "$SSH_CONNECTION" ]; then
     # Disable Oh-My-Zsh auto title
     DISABLE_AUTO_TITLE="true"
-    
+
     # Set title to hostname
     echo -ne "\033]0;SSH: $(hostname)\007"
-    
+
     # Keep title on every prompt
     precmd() {
         echo -ne "\033]0;SSH: $(hostname)\007"
     }
 fi
+
+
