@@ -23,3 +23,5 @@ alias cd='z'
 # Python
 alias python='python3'
 
+# Arch Specific
+alias hostname='cat /etc/hostname'
