@@ -5,7 +5,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Detecting OS..."
 
-if [[ -f /etc/arch-release ]]; then
+if [[ "$(uname)" == "Darwin" ]]; then
+  echo "macOS detected"
+  bash "$SCRIPT_DIR/macos/packages.sh"
+
+elif [[ -f /etc/arch-release ]]; then
   echo "Arch Linux detected"
   bash "$SCRIPT_DIR/arch/packages.sh"
 

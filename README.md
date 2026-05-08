@@ -21,9 +21,14 @@ Opinionated dotfiles and shell bootstrap for my servers and workstations. Single
 
 | OS | Package script | Notes |
 |---|---|---|
+| macOS | `macos/packages.sh` | Homebrew required; `bat` and `eza` included natively |
 | Arch Linux | `arch/packages.sh` | Full toolset via pacman |
 | Debian | `debian/packages.sh` | apt + batcat symlink |
 | Ubuntu | `ubuntu/packages.sh` | apt + batcat symlink + zoxide from upstream |
+
+### Why macOS gets its own script
+
+Homebrew is assumed to be pre-installed. Unlike Debian/Ubuntu, `bat` on macOS installs as `bat` (no `batcat` conflict), so no symlink is needed. `eza` is available directly via brew, same as Arch.
 
 ### Why Ubuntu gets its own script
 
@@ -77,18 +82,18 @@ Prefix + I
 
 ## Packages installed
 
-| Package | Purpose | Arch | Debian | Ubuntu |
-|---|---|---|---|---|
-| git | Version control | pacman | apt | apt |
-| curl | HTTP client | pacman | apt | apt |
-| zsh | Shell | pacman | apt | apt |
-| fzf | Fuzzy finder | pacman | apt | apt |
-| ripgrep | Fast grep | pacman | apt | apt |
-| bat | Syntax-highlighted cat | pacman | apt (→ batcat) | apt (→ batcat) |
-| eza | Modern ls | pacman | — | — |
-| zoxide | Smarter cd | pacman | apt | upstream |
-| entr | Run on file change | pacman | apt | apt |
-| tmux | Terminal multiplexer | pacman | apt | apt |
+| Package | Purpose | macOS | Arch | Debian | Ubuntu |
+|---|---|---|---|---|---|
+| git | Version control | brew | pacman | apt | apt |
+| curl | HTTP client | brew | pacman | apt | apt |
+| zsh | Shell | brew | pacman | apt | apt |
+| fzf | Fuzzy finder | brew | pacman | apt | apt |
+| ripgrep | Fast grep | brew | pacman | apt | apt |
+| bat | Syntax-highlighted cat | brew | pacman | apt (→ batcat) | apt (→ batcat) |
+| eza | Modern ls | brew | pacman | — | — |
+| zoxide | Smarter cd | brew | pacman | apt | upstream |
+| entr | Run on file change | brew | pacman | apt | apt |
+| tmux | Terminal multiplexer | brew | pacman | apt | apt |
 
 ---
 

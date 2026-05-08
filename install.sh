@@ -63,7 +63,11 @@ create_symlink "$DOTFILES_DIR/zsh"       "$HOME/zsh"
 create_symlink "$DOTFILES_DIR/cbin"      "$HOME/cbin"
 
 if [[ "$SHELL" != *"/zsh" ]]; then
-  sudo chsh -s "$(which zsh)" "$USER"
+  if [[ "$(uname)" == "Darwin" ]]; then
+    chsh -s "$(which zsh)"
+  else
+    sudo chsh -s "$(which zsh)" "$USER"
+  fi
 fi
 
 echo "Zsh setup complete. Log out and log back in to apply changes."
